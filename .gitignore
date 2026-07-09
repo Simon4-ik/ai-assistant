@@ -1,0 +1,5 @@
+config/api_keys.json
+__pycache__/
+*.pyc
+config/certs/jarvis.crt
+config/certs/jarvis.key
