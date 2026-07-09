@@ -9,7 +9,7 @@ A real-time voice AI that can hear, see, understand, and control your computer �
 
 ## ✨ Overview
 
-MARK XLVIII is a direct evolution of Mark XLVII — sharper, faster, and more natural to talk to. This build focused entirely on removing every friction point: the silence while JARVIS "thinks," the awkward double-responses, the interrupts that took four seconds to land, the news results that linked to homepages instead of articles. Everything that made the experience feel like software instead of an assistant has been addressed.
+MARK XLVIII is a direct evolution of Mark XLVII — sharper, faster, and more natural to talk to. This build focused entirely on removing every friction point: the silence while JIGAR "thinks," the awkward double-responses, the interrupts that took four seconds to land, the news results that linked to homepages instead of articles. Everything that made the experience feel like software instead of an assistant has been addressed.
 
 It's not just an assistant — it's an extension of your digital life.
 
@@ -27,7 +27,7 @@ It's not just an assistant — it's an extension of your digital life.
 | 🧠 Persistent Memory | Deeply remembers projects, preferences, and personal context across sessions |
 | ⌨️ Hybrid Input | Seamlessly switch between keyboard typing and voice commands |
 | 🌅 Morning Briefing | On first boot: greets you, reads the time, fetches live news headlines, and checks weather |
-| 🔔 Proactive Check-ins | After 15 minutes of silence JARVIS checks context and offers something genuinely useful — no hardcoded rules, Gemini decides |
+| 🔔 Proactive Check-ins | After 15 minutes of silence JIGAR checks context and offers something genuinely useful — no hardcoded rules, Gemini decides |
 | 📊 Hardware Monitoring | Continuous CPU, RAM, GPU and temperature telemetry with localized voice alerts when thresholds are breached |
 | 🌤️ Weather Report | Live weather data for your city, personalized from memory |
 | 🗺️ Dynamic Content Panel | Scrollable display layer beneath the HUD that renders web results, news, and search data with timestamps |
@@ -48,10 +48,10 @@ It's not just an assistant — it's an extension of your digital life.
 ## 🆕 What's New in XLVIII
 
 ### ✋ Instant Interrupt — ESC or Button
-Press **Escape** or click the `INTERRUPT` button to cut JARVIS off mid-sentence and return to listening. Previously, cancelling a response required waiting for the full audio buffer to drain — sometimes four seconds. In Mark XLVIII, audio is split into ~50 ms chunks (2400 bytes each) so the interrupt fires within one slice. The interrupt drains the audio queue, sets a flag, and clears the turn — listening resumes in under 100 ms.
+Press **Escape** or click the `INTERRUPT` button to cut JIGAR off mid-sentence and return to listening. Previously, cancelling a response required waiting for the full audio buffer to drain — sometimes four seconds. In Mark XLVIII, audio is split into ~50 ms chunks (2400 bytes each) so the interrupt fires within one slice. The interrupt drains the audio queue, sets a flag, and clears the turn — listening resumes in under 100 ms.
 
 ### 👁️ Immediate Vision Acknowledgment
-When you ask JARVIS to look at your screen or camera, it no longer goes silent while processing. The tool now instructs Gemini to immediately say a natural sentence ("Looking at your screen now, sir" / "Ekrana bakıyorum efendim") while the image capture runs. The actual analysis follows as a second response. No more awkward silence.
+When you ask JIGAR to look at your screen or camera, it no longer goes silent while processing. The tool now instructs Gemini to immediately say a natural sentence ("Looking at your screen now, sir" / "Ekrana bakıyorum efendim") while the image capture runs. The actual analysis follows as a second response. No more awkward silence.
 
 ### 📰 Parallel News Search — First Result Wins
 News queries now run **Gemini Grounded Search and DuckDuckGo news simultaneously** in two daemon threads. Whichever delivers a valid result first wins; the other is silently discarded. Previously, a Gemini 503 error would stall the search for several seconds before falling back to DDG. Now the fallback happens in parallel — total news fetch time drops to whichever backend is fastest at that moment.
@@ -60,22 +60,22 @@ News queries now run **Gemini Grounded Search and DuckDuckGo news simultaneously
 DDG news search was previously using `ddgs.text()`, which returned website homepage URLs for news queries. Mark XLVIII switches to `ddgs.news()`, which returns actual article URLs, titles, snippets, and source names — exactly what you want in a news briefing.
 
 ### 🌅 Two-Phase Startup Briefing — Runs Concurrently
-The startup briefing now sends Phase 2 (news fetch) while Phase 1 audio (the greeting) is still playing. Previously, Phase 2 waited for Phase 1 to fully complete. The 1.5-second overlap means the news headline is ready by the time JARVIS finishes saying "Good morning."
+The startup briefing now sends Phase 2 (news fetch) while Phase 1 audio (the greeting) is still playing. Previously, Phase 2 waited for Phase 1 to fully complete. The 1.5-second overlap means the news headline is ready by the time JIGAR finishes saying "Good morning."
 
 ### 🔁 Smarter Reconnection — Exponential Backoff
 Network timeouts now use exponential backoff: 3s → 6s → 12s → 60s (capped). Each retry shows a Turkish-language status message in the UI ("Bağlantı kurulamadı — Xs sonra tekrar deneniyor"). Previously, a dropped connection would loop tightly and show no useful information.
 
 ### 🛡️ Vision Cooldown & Echo Guard
-Screen capture is guarded against echo loops. If JARVIS speaks about the screen and the microphone picks up its own voice, a secondary `screen_process` call can be triggered. Mark XLVIII blocks duplicate calls with a 4-second cooldown and a `_vision_busy` flag. Both are fully reset when a new session connects — fixing a bug where the cooldown would persist across reconnects and block legitimate requests.
+Screen capture is guarded against echo loops. If JIGAR speaks about the screen and the microphone picks up its own voice, a secondary `screen_process` call can be triggered. Mark XLVIII blocks duplicate calls with a 4-second cooldown and a `_vision_busy` flag. Both are fully reset when a new session connects — fixing a bug where the cooldown would persist across reconnects and block legitimate requests.
 
 ### 🌐 Language-Aware Address — Never Mixed
-The system prompt now enforces: **Turkish → efendim**, **English → sir**, never mixed. Mark XLVII's prompt said "Always call sir to user" which caused JARVIS to say "sir" mid-Turkish sentence. Fixed.
+The system prompt now enforces: **Turkish → efendim**, **English → sir**, never mixed. Mark XLVII's prompt said "Always call sir to user" which caused JIGAR to say "sir" mid-Turkish sentence. Fixed.
 
 ### 🪟 Zero Terminal Windows
 A subprocess monkey-patch at startup sets `CREATE_NO_WINDOW` on every child process launched by the app. No PowerShell, no CMD, no terminal flash — ever. Applies to all actions including reminders, system commands, and scheduler calls.
 
 ### 🔄 Session State Isolation
-All transient vision and interrupt flags (`_pending_vision`, `_vision_busy`, `_vision_cam_active`, `_vision_close_pending`, `_interrupted`) are fully reset whenever a new Gemini session connects. Previously, state from a crashed session could carry over and leave JARVIS in a broken state until restart.
+All transient vision and interrupt flags (`_pending_vision`, `_vision_busy`, `_vision_cam_active`, `_vision_close_pending`, `_interrupted`) are fully reset whenever a new Gemini session connects. Previously, state from a crashed session could carry over and leave JIGAR in a broken state until restart.
 
 ---
 
@@ -132,7 +132,7 @@ Mark XLVIII/
 │   └── proactive.py        # Proactive silence-break suggestions
 ├── memory/                  # Persistent key-value memory store
 ├── core/
-│   └── prompt.txt           # JARVIS personality and tool-routing rules
+│   └── prompt.txt           # JIGAR personality and tool-routing rules
 └── config/
     └── api_keys.json        # API key and system configuration
 ```
@@ -148,7 +148,7 @@ Licensed under **[Creative Commons BY-NC 4.0](https://creativecommons.org/licens
 
 ## 👤 Connect with the Creator
 
-Engineered by a developer building a real-world JARVIS-style assistant.
+Engineered by a developer building a real-world JIGAR-style assistant.
 ⭐ **Star the repository to support the journey to Mark 100.**
 
 | Platform | Link |
